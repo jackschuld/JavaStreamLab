@@ -127,8 +127,12 @@ public class StreamLabService {
     {
         // Write a query that retrieves all of the products in the shopping cart of users who have the role of "Employee".
     	// Return the list
-
-    	return null;
+        Role employeeRole = roles.findAll().stream().filter(r -> r.getName().equals("Employee")).findFirst().orElse(null);
+        List<User> employees = users.findAll().stream().filter(u -> u.getRoles().contains(employeeRole)).toList();
+        List<List<ShoppingcartItem>> employeesCarts = employees.stream().map(e -> e.getShoppingcartItems()).toList();
+        List<ShoppingcartItem> allCartItems = employeesCarts.stream().flatMap(list -> list.stream()).collect(Collectors.toList());
+        List<Product> employeeProducts = allCartItems.stream().map(e -> e.getProduct()).toList();
+    	return employeeProducts;
     }
 
     // <><><><><><><><> CUD (Create, Update, Delete) Actions <><><><><><><><><>
@@ -149,10 +153,12 @@ public class StreamLabService {
     {
         // Create a new Product object and add that product to the Products table.
         // Return the product
-    	
-
-    	return null;
-
+        Product newProduct = new Product();
+        newProduct.setDescription("Jimmy Butler Bull's limited edition bobble-head");
+        newProduct.setName("Jimmy Butler Bobble-Head");
+        newProduct.setPrice(95);
+        products.save(newProduct);
+        return newProduct;
     }
 
     public List<Role> CDemoTwo()
@@ -169,9 +175,14 @@ public class StreamLabService {
     	// Create a new ShoppingCartItem to represent the new product you created being added to the new User you created's shopping cart.
         // Add the product you created to the user we created in the ShoppingCart junction table.
         // Return the ShoppingcartItem
-
-    	return null;
-    	
+        Product newProduct = products.findAll().stream().filter(p -> p.getName().equals("Jimmy Butler Bobble-Head")).findFirst().orElse(null);
+        User newUser = users.findAll().stream().filter(u -> u.getEmail().equals("david@gmail.com")).findFirst().orElse(null);
+        ShoppingcartItem newShoppingCartItem = new ShoppingcartItem();
+        newShoppingCartItem.setProduct(newProduct);
+        newShoppingCartItem.setQuantity(1);
+        newShoppingCartItem.setUser(newUser);
+        shoppingcartitems.save(newShoppingCartItem);
+    	return newShoppingCartItem;
     }
 
     // <><> U Actions (Update) <><>
