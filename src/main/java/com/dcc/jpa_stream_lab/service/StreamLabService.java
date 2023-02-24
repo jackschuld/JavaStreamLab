@@ -199,15 +199,19 @@ public class StreamLabService {
     {
         // Update the price of the product you created to a different value.
         // Return the updated product
-    	return null;
+        Product product = products.findAll().stream().filter(p -> p.getName().equals("Jimmy Butler Bobble-Head")).findFirst().orElse(null);
+        product.setPrice(110);
+    	return product;
     }
 
     public User UProblemTwo()
     {
         // Change the role of the user we created to "Employee"
         // HINT: You need to delete the existing role relationship and then create a new UserRole object and add it to the UserRoles table
-
-    	return null;
+        User user = users.findAll().stream().filter(u -> u.getEmail().equals("david@gmail.com")).findFirst().orElse(null);
+        Role removedRole = user.removeRole(roles.findAll().stream().filter(r -> r.getName().equals("Customer")).findFirst().orElse(null));
+        Role newRole = user.addRole(roles.findAll().stream().filter(r -> r.getName().equals("Employee")).findFirst().orElse(null));
+        return user;
     }
 
     //BONUS:
